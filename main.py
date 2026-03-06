@@ -2,24 +2,21 @@ import sys
 import os
 import site
 
-# [중요] 경로 주입이 모든 import보다 먼저 와야 합니다!
+# 1. 경로 주입 (가장 먼저 실행되어야 함!)
 user_site = site.getusersitepackages()
 if user_site not in sys.path:
     sys.path.insert(0, user_site)
 
-# 이제 라이브러리를 불러옵니다.
+# 2. 이제 안심하고 라이브러리를 불러옵니다.
 try:
+    import requests
+    import json
     from dotenv import load_dotenv
     from google import genai
-    import json
 except ImportError as e:
     print(f"❌ 라이브러리 로드 실패: {e}")
-    print("💡 해결책: 터미널에 'pip install --user python-dotenv google-genai --break-system-packages'를 입력하세요.")
+    print("💡 해결책: 터미널에 아래 명령어를 입력하세요.")
+    print("pip install --user google-genai requests python-dotenv --break-system-packages")
     sys.exit()
 
-# .env 로드 및 설정 시작
-load_dotenv()
-API_KEY = os.getenv("GEMINI_API_KEY")
-client = genai.Client(api_key=API_KEY)
-
-# ... 나머지 기존 코드 ...
+# 이후 코드(load_dotenv, API 설정 등)는 동일하게 작성...
